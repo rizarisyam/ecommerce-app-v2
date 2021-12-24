@@ -54,7 +54,6 @@ jobs:
     strategy:
       matrix:
         server: ${{ fromJson(needs.create-deployment-artifacts.outputs.deployment-matrix) }}
-
     steps:
     - uses: actions/download-artifact@v2
       with:
