@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CreateProductRequest;
 use App\Models\Product;
 use App\Models\ProductCategory;
 use App\Models\ProductDiscount;
@@ -9,6 +10,7 @@ use App\Models\ProductInventory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
+use App\Http\Resources\ProductResource;
 
 class ProductController extends Controller
 {
@@ -19,7 +21,16 @@ class ProductController extends Controller
      */
     public function index()
     {
-        //
+        $products = ProductResource::collection(Product::all());
+        // return $products;
+        // $categories = [];
+        // $inventory = [];
+        // foreach($products as $prod) {
+        //     dump($prod->inventory->quantity);
+        // }
+        return Inertia::render("Admin/Product/Index", [
+            'products' => $products
+        ]);
     }
 
     /**
@@ -41,25 +52,27 @@ class ProductController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(CreateProductRequest $request)
     {
-        $request->validate([
-            'name' => ['required'],
-            'desc' => ['required'],
-            'SKU' => ['required'],
-            'price' => ['required'],
-        ]);
+
+            $image_path = '';
+
+    if ($request->hasFile('imageFile')) {
+        $image_path = $request->file('imageFile')->store('image');
+    }
 
        $inventory = ProductInventory::create(['quantity' => $request->quantity]);
+        $request->merge(['image_url' => $image_path]);
 
-        $inventory->product()->create([
-            'name' => $request->name,
-            'desc' => $request->desc,
-            'SKU' => $request->SKU,
-            'category_id' => $request->category_id,
-            'discount_id' => $request->discount_id,
-            'price' => $request->price
-        ]);
+        $inventory->product()->create($request->all());
+    //     $inventory->product()->create([
+    //         'name' => $request->name,
+    //         'desc' => $request->desc,
+    //         'SKU' => $request->SKU,
+    //         'category_id' => $request->category_id,
+    //         'discount_id' => $request->discount_id,
+    //         'price' => $request->price
+    //     ]);
     //    $inventory->product()->create();
 
 
@@ -106,8 +119,12 @@ class ProductController extends Controller
      * @param  \App\Models\Product  $product
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Product $product)
+    public function destroy($id)
     {
-        //
+        $product = Product::findOrFail($id);
+
+        $product->delete();
+
+        return Redirect::route('products.index');
     }
 }

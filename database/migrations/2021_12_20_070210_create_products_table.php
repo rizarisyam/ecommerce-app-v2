@@ -17,23 +17,25 @@ class CreateProductsTable extends Migration
             $table->id();
             $table->string('name');
             $table->text('desc')->nullable();
-            $table->string('SKU');
-            $table->foreignId('category_id')
-            ->nullable()
-            ->constrained('product_categories')
-            ->onUpdate('cascade')
-            ->onDelete('cascade');
-            $table->foreignId('inventory_id')
-            ->nullable()
-            ->constrained('product_inventories')
-            ->onUpdate('cascade')
-            ->onDelete('cascade');
+            $table->text('SKU');
             $table->decimal('price');
+            $table->text('image_url');
+            $table->foreignId('category_id')
+                  ->constrained('product_categories')
+                  ->cascadeOnUpdate()
+                  ->cascadeOnDelete();
+
+            $table->foreignId('inventory_id')
+                  ->constrained('product_inventories')
+                  ->cascadeOnUpdate()
+                  ->cascadeOnDelete();
+
             $table->foreignId('discount_id')
-            ->nullable()
-            ->constrained('product_discounts')
-            ->onUpdate('cascade')
-            ->onDelete('cascade');
+                  ->nullable()
+                  ->constrained('product_discounts')
+                  ->cascadeOnUpdate()
+                  ->cascadeOnDelete();;
+
             $table->timestamps();
         });
     }

@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Product extends Model
 {
     use HasFactory;
-    protected $fillable = ['name', 'desc', 'SKU', 'category_id', 'discount_id', 'inventory_id', 'price'];
+    protected $fillable = ['name', 'desc', 'SKU', 'category_id', 'discount_id', 'inventory_id', 'price', 'image_url'];
 
     public function inventory() {
         return $this->belongsTo(ProductInventory::class, 'inventory_id', 'id', 'product_inventories');

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Product;
 use App\Models\ProductCategory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
@@ -16,7 +17,9 @@ class ProductCategoryController extends Controller
      */
     public function index()
     {
-        return Inertia::render('Admin/Category/Index');
+        return Inertia::render('Admin/Category/Index',[
+            'categories' => ProductCategory::all()
+        ]);
     }
 
     /**
@@ -37,14 +40,23 @@ class ProductCategoryController extends Controller
      */
     public function store(Request $request)
     {
+        // return $request->all();
+
         $request->validate([
             'name' => ['required'],
             'desc' => ['']
         ]);
-        ProductCategory::create([
-            'name' => $request->name,
-            'desc' => $request->desc
-        ]);
+
+        $image_path = "";
+        if ($request->hasFile('imageFile')) {
+            $image_path = $request->file('imageFile')->store('categoryImages');
+        }
+
+        $request->merge(['image_url' => $image_path]);
+
+        // return $request->all();
+
+        ProductCategory::create($request->all());
             return Redirect::route('product-categories.index');
     }
 
@@ -65,9 +77,12 @@ class ProductCategoryController extends Controller
      * @param  \App\Models\ProductCategory  $productCategory
      * @return \Illuminate\Http\Response
      */
-    public function edit(ProductCategory $productCategory)
+    public function edit($id)
     {
-        //
+        $category = ProductCategory::find($id);
+        return Inertia::render('Admin/Category/Edit', [
+            'category' => $category
+        ]);
     }
 
     /**
@@ -77,9 +92,20 @@ class ProductCategoryController extends Controller
      * @param  \App\Models\ProductCategory  $productCategory
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, ProductCategory $productCategory)
+    public function update(Request $request, $id)
     {
-        //
+        $request->validate([
+            'name' => ['required'],
+            'desc' => ''
+        ]);
+
+        $category = ProductCategory::find($id);
+        $category->update([
+            'name' => $request->name,
+            'desc' => $request->desc
+        ]);
+
+        return Redirect::route('product-categories.index');
     }
 
     /**
@@ -88,8 +114,11 @@ class ProductCategoryController extends Controller
      * @param  \App\Models\ProductCategory  $productCategory
      * @return \Illuminate\Http\Response
      */
-    public function destroy(ProductCategory $productCategory)
+    public function destroy($id)
     {
-        //
+        $category = ProductCategory::find($id);
+        $category->delete();
+
+        return Redirect::route('product-categories.index');
     }
 }

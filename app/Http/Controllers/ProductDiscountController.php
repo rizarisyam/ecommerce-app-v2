@@ -16,7 +16,9 @@ class ProductDiscountController extends Controller
      */
     public function index()
     {
-        //
+        return Inertia::render('Admin/Discount/Index', [
+            'discounts' => ProductDiscount::all()
+        ]);
     }
 
     /**
@@ -71,9 +73,13 @@ class ProductDiscountController extends Controller
      * @param  \App\Models\ProductDiscount  $productDiscount
      * @return \Illuminate\Http\Response
      */
-    public function edit(ProductDiscount $productDiscount)
+    public function edit($id)
     {
-        //
+        $discount = ProductDiscount::findOrFail($id);
+
+        return Inertia::render('Admin/Discount/Edit', [
+            'discount' => $discount
+        ]);
     }
 
     /**
@@ -83,9 +89,18 @@ class ProductDiscountController extends Controller
      * @param  \App\Models\ProductDiscount  $productDiscount
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, ProductDiscount $productDiscount)
+    public function update(Request $request, $id)
     {
-        //
+        $discount = ProductDiscount::findOrFail($id);
+
+        $discount->update([
+            'name' => $request->name,
+            'desc' => $request->desc,
+            'discount_percent' => $request->discount_percent,
+            'active' => $request->active
+        ]);
+
+        return Redirect::route('product-discounts.index');
     }
 
     /**
@@ -94,8 +109,11 @@ class ProductDiscountController extends Controller
      * @param  \App\Models\ProductDiscount  $productDiscount
      * @return \Illuminate\Http\Response
      */
-    public function destroy(ProductDiscount $productDiscount)
+    public function destroy($id)
     {
-        //
+        $discount = ProductDiscount::findOrFail($id);
+        $discount->delete();
+
+        return Redirect::route('product-discounts.index');
     }
 }
