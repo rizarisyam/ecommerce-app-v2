@@ -58,9 +58,8 @@ jobs:
     - uses: actions/download-artifact@v2
       with:
         name: app-build
-
     - name: Upload
-      uses: appleboy/ssh-action@v0.1.4
+      uses: appleboy/scp-action@v0.1.2
       with:
         host: ${{ matrix.server.ip }}
         username: ${{ matrix.server.username }}
