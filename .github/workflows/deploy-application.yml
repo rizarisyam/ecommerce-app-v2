@@ -63,8 +63,8 @@ jobs:
       with:
         host: ${{ matrix.server.ip }}
         username: ${{ matrix.server.username }}
-        password: ${{ matrix.server.password }}
-        # key: ${{ secrets.SSH_KEY }}
+        # password: ${{ matrix.server.password }}
+        key: ${{ secrets.SSH_KEY }}
         port: ${{ matrix.server.port }}
         source: ${{ github.sha }}.tar.gz
         target: ${{ matrix.server.path }}/artifacts
