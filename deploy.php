@@ -22,7 +22,7 @@ add('writable_dirs', []);
 
 // Hosts
 
-host('project.com')
+host('128.199.224.71')
     ->user('riza')
     ->set('deploy_path', '/var/www/html/ecommerce-app');
 
