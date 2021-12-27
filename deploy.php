@@ -24,7 +24,7 @@ add('writable_dirs', []);
 
 host('128.199.224.71')
     ->user('riza')
-    ->set('deploy_path', '/var/www/html/ecommerce-app');
+    ->set('deploy_path', '/var/www/html/');
 
 // Tasks
 
