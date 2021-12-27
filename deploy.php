@@ -4,10 +4,10 @@ namespace Deployer;
 require 'recipe/laravel.php';
 
 // Project name
-set('application', env('APP_NAME'));
+set('application', 'my_project');
 
 // Project repository
-set('repository', 'git@github.com:rizarisyam/ecommerce-app-v2.git');
+set('repository', 'https://github.com/rizarisyam/ecommerce-app-v2.git');
 
 // [Optional] Allocate tty for git clone. Default value is false.
 set('git_tty', true);
@@ -22,9 +22,8 @@ add('writable_dirs', []);
 
 // Hosts
 
-host('128.199.224.71')
+host('project.com')
     ->user('riza')
-    ->identifyFile('~/.ssh/id_ed25519')
     ->set('deploy_path', '/var/www/html/ecommerce-app');
 
 // Tasks
@@ -38,5 +37,5 @@ after('deploy:failed', 'deploy:unlock');
 
 // Migrate database before symlink new release.
 
-// before('deploy:symlink', 'artisan:migrate');
+before('deploy:symlink', 'artisan:migrate');
 
