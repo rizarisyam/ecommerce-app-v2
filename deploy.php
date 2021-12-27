@@ -30,6 +30,9 @@ host('128.199.224.71')
 
 task('build', function () {
     run('cd {{release_path}} && build');
+    run('php artisan key:generate');
+    run('npm install');
+    run('npm run prod')
 });
 
 // [Optional] if deploy fails automatically unlock.
